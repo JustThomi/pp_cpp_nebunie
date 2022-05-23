@@ -1,5 +1,32 @@
 #include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
+
+
+class Sala{
+    string name;
+    int price, parking,seats;
+    bool wifi;
+
+public:
+    Sala(string n, bool w, int price, int p, int s);
+    friend ostream & operator <<(ostream &, const Sala&);
+};
+
+Sala::Sala(string n, bool w, int price, int p, int s) {
+    this -> name = n;
+    this -> wifi = w;
+    this -> price = price;
+    this -> parking = p;
+    this -> seats = s;
+}
+
+ostream& operator <<(ostream &a, const Sala& b){
+    a << b.name << " " << b.wifi << " " << b.price <<" "<< b.seats << " " << b.parking << endl;
+    return a;
+}
+
 
 
 void selecteaza_data_zi(int zile){
@@ -103,8 +130,8 @@ void selecteaza_sala() {
 
 void creaza_rezervare() {
     cout<<"Introduceti numele\n";
-    char nume[100];
-    cin>>nume;
+    char name[100];
+    cin>>name;
     int ver;
     cout<<"0. Meniu principal\n";
     cout<<"1. Selecteaza o sala\n";
@@ -141,6 +168,7 @@ void afisare_sali() {
 }
 
 int main(){
+    vector<Sala> sali;
     bool run = true;
     int choice;
 
