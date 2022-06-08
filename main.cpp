@@ -8,17 +8,43 @@
 using namespace std;
 
 // CREATE REZERVARE
-int selecteaza_data_zi() {
+int selecteaza_data_zi(int n, vector<Rezervare> rezervari) {
     int ver;
 
+    if (n == 1 || n == 3 || n == 5  || n == 7 || n == 8 || n == 10 || n==12){
+        for( int i = 1 ; i <= 31; i++){
+            int g = 0;
+            for( int j = 0; j < rezervari.size() && g == 0; j++) {
+                if (rezervari[j].getDay() == i)
+                    g = 1;
+            }
+            if(g == 0)
+                cout<< i << " ";
+        }
+    }
+    else{
+        for( int i = 1 ; i <= 30; i++){
+            int g = 0;
+            for( int j = 0; j < rezervari.size() && g == 0; j++) {
+                if (rezervari[j].getDay() == i)
+                    g = 1;
+            }
+            if(g == 0)
+                cout<< i << " ";
+        }
+    }
+
+    cout << endl;
+    cout << "0. Meniu principal\n\n";
     cout << "Alege o  zi:\n";
+
     cin >> ver;
 
     if (ver >= 1 && ver <= 31)
         return ver;
     else {
         cout << "NU EXISTA LUNA: " << ver << endl;
-        return selecteaza_data_zi();
+        return selecteaza_data_zi(ver, rezervari);
     }
 }
 
@@ -61,7 +87,7 @@ int selecteaza_sala() {
     return ver;
 }
 
-Rezervare creaza_rezervare() {
+Rezervare creaza_rezervare(vector<Rezervare> rezervari) {
     int sala, month, day;
     string name;
 
@@ -69,31 +95,34 @@ Rezervare creaza_rezervare() {
     cin >> name;
     sala = selecteaza_sala();
     month = selecteaza_data_luna();
-    day = selecteaza_data_zi();
+    day = selecteaza_data_zi(month, rezervari);
 
     return Rezervare(name, sala, month, day);
 }
 
+
 // DELETE
-void delete_rezervare(vector<Rezervare> r, string n) {
-    vector<Rezervare>::iterator it;
-    it = r.begin();
-    while (it != r.end()) {
+void delete_rezervare(vector<Rezervare> &r, string n) {
+    auto it = r.begin();
+    while (it <= r.end()) {
         if (it->getName() == n) {
-            r.erase(it);
+            it = r.erase(it);
         }
         it++;
     }
 }
 
 // PRINT
-int search_rezervare(vector<Rezervare> r, string name) {
+void search_rezervare(vector<Rezervare> r, string name) {
+    int g = 0;
     for (int i = 0; i < r.size(); i++) {
         if (r[i].getName() == name) {
-            return i;
+            cout << "Sala: " << r[i].getSala() << endl << "Data: " << r[i].getDay() << "." << r[i].getMonth() << endl;
+            g = 1;
         }
     }
-    return -1;
+    if(g == 0)
+        cout << "Nu avem o rezervare facuta pe acest nume..." << endl;
 }
 
 void afisare_sali(vector<Sala> s) {
@@ -192,19 +221,19 @@ int main() {
         switch (choice) {
             case 1:
                 cout << "Se va crea o rezervare" << endl;
-                rezervari.push_back(creaza_rezervare());
+                rezervari.push_back(creaza_rezervare(rezervari));
                 save_rezervari(rezervari);
                 break;
             case 2:
                 cout << "Introduceti numele dvs: " << endl;
                 cin >> name;
-                cout << rezervari[search_rezervare(rezervari, name)];
+                search_rezervare(rezervari, name);
                 break;
             case 3:
                 cout << "Se va sterge o rezervare" << endl;
                 cout << "Introduceti numele dvs: " << endl;
                 cin >> delete_name;
-                delete_rezervare(rezervari, name);
+                delete_rezervare(rezervari, delete_name);
                 save_rezervari(rezervari);
                 break;
             case 4:

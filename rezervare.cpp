@@ -18,6 +18,9 @@ ostream& operator<<(ostream& os, const Rezervare& r) {
 }
 
 string Rezervare::getName() { return name; }
+
 int Rezervare::getSala() { return sala; }
+
 int Rezervare::getMonth() { return month; }
+
 int Rezervare::getDay() { return day; }
