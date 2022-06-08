@@ -9,4 +9,7 @@ class Rezervare {
     Rezervare(string n, int s, int m, int d);
     friend ostream& operator<<(ostream&, const Rezervare&);
     string getName();
+    int getSala();
+    int getMonth();
+    int getDay();
 };

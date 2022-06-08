@@ -11,9 +11,7 @@ using namespace std;
 int selecteaza_data_zi() {
     int ver;
 
-    cout << "0. Meniu principal\n\n";
     cout << "Alege o  zi:\n";
-
     cin >> ver;
 
     if (ver >= 1 && ver <= 31)
@@ -27,7 +25,6 @@ int selecteaza_data_zi() {
 int selecteaza_data_luna() {
     int ver;
 
-    cout << "0. Meniu principal\n";
     cout << "1. Ianuarie\n";
     cout << "2. Februarie\n";
     cout << "3. Martie\n";
@@ -55,7 +52,6 @@ int selecteaza_sala() {
     int ver;
 
     cout << "Selecteaza o sala\n";
-    cout << "0. Meniu principal\n";
     cout << "1. Sala 1\n";
     cout << "2. Sala 2\n";
     cout << "3. Sala 3\n";
@@ -79,7 +75,6 @@ Rezervare creaza_rezervare() {
 }
 
 // DELETE
-// nu merge atm, dar nu m-am mai uitat dc
 void delete_rezervare(vector<Rezervare> r, string n) {
     vector<Rezervare>::iterator it;
     it = r.begin();
@@ -111,20 +106,70 @@ void afisare_rezervari(vector<Rezervare> r) {
     vector<Rezervare>::iterator it;
     it = r.begin();
     while (it != r.end()) {
-        cout << *it;
+        cout << *it << endl;
         it++;
     }
 }
 
 // FILE IO
-void load_sali() {
-    fstream file;
+void load_sali(vector<Sala>& s) {
+    ifstream file("sali.txt");
+    string line;
 
     if (!file) {
         cout << "FILE NOT FOUND";
     } else {
-        // to be continued lol
+        int price, parking, seats;
+        bool wifi;
+        string name;
+
+        while (!file.eof()) {
+            file >> name;
+            file >> wifi;
+            file >> price;
+            file >> parking;
+            file >> seats;
+            s.push_back(Sala(name, wifi, price, parking, seats));
+        }
     }
+    file.close();
+}
+
+// NOT TESTED
+void save_rezervari(vector<Rezervare> r) {
+    ofstream file("rezervari.txt");
+
+    if (!file) {
+        cout << "FILE NOT FOUND";
+    } else {
+        for (int i = 0; i < r.size(); i++) {
+            file << r[i].getName() << endl;
+            file << r[i].getSala() << endl;
+            file << r[i].getMonth() << endl;
+            file << r[i].getDay() << endl;
+        }
+    }
+    file.close();
+}
+
+void load_rezervari(vector<Rezervare>& r) {
+    ifstream file("rezervari.txt");
+    string line;
+
+    if (!file) {
+        cout << "No rezervari prezent";
+    } else {
+        int sala, month, day;
+        string name;
+        while (!file.eof()) {
+            file >> name;
+            file >> sala;
+            file >> month;
+            file >> day;
+            r.push_back(Rezervare(name, sala, month, day));
+        }
+    }
+    file.close();
 }
 
 int main() {
@@ -135,12 +180,8 @@ int main() {
     int choice;
     string name, delete_name;
 
-    // hardcoded sali for testing
-    sali.push_back(Sala("Sweden", true, 100, 50, 50));
-    sali.push_back(Sala("India", true, 200, 100, 100));
-    sali.push_back(Sala("Japan", true, 350, 200, 300));
-    sali.push_back(Sala("Poland", false, 400, 500, 500));
-
+    load_sali(sali);
+    load_rezervari(rezervari);
     while (run) {
         cout << "1. Creaza rezervare\n2. Cauta rezervare\n3. Sterge "
                 "rezervare\n4. Print sali\n5. "
@@ -152,9 +193,9 @@ int main() {
             case 1:
                 cout << "Se va crea o rezervare" << endl;
                 rezervari.push_back(creaza_rezervare());
+                save_rezervari(rezervari);
                 break;
             case 2:
-                // No error handling prezent atm
                 cout << "Introduceti numele dvs: " << endl;
                 cin >> name;
                 cout << rezervari[search_rezervare(rezervari, name)];
@@ -164,6 +205,7 @@ int main() {
                 cout << "Introduceti numele dvs: " << endl;
                 cin >> delete_name;
                 delete_rezervare(rezervari, name);
+                save_rezervari(rezervari);
                 break;
             case 4:
                 cout << "Printam sali" << endl;
@@ -175,6 +217,7 @@ int main() {
                 break;
             case 6:
                 run = false;
+                save_rezervari(rezervari);
                 break;
             default:
                 cout << "\nOptiunea nu exisat\n";
