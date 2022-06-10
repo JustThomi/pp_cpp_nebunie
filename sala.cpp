@@ -12,8 +12,8 @@ Sala::Sala(string n, bool w, int price, int p, int s) {
 }
 
 ostream& operator<<(ostream& os, const Sala& b) {
-    os << b.name << " " << b.wifi << " " << b.price << " " << b.seats << " "
-       << b.parking << endl;
+    os << "Nume:" << b.name << endl << "WiFi: " << b.wifi << endl << "Pret: " << b.price << endl << "Locuri: " << b.seats << endl <<
+      "Locuri de parcari: " << b.parking << endl;
     return os;
 }
 

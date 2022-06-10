@@ -8,14 +8,14 @@
 using namespace std;
 
 // CREATE REZERVARE
-int selecteaza_data_zi(int n, vector<Rezervare> rezervari) {
+int selecteaza_data_zi(int n, string s, vector<Rezervare> rezervari) {
     int ver;
 
     if (n == 1 || n == 3 || n == 5  || n == 7 || n == 8 || n == 10 || n==12){
         for( int i = 1 ; i <= 31; i++){
             int g = 0;
             for( int j = 0; j < rezervari.size() && g == 0; j++) {
-                if (rezervari[j].getDay() == i)
+                if (rezervari[j].getDay() == i && rezervari[i].getSala() != s)
                     g = 1;
             }
             if(g == 0)
@@ -26,7 +26,7 @@ int selecteaza_data_zi(int n, vector<Rezervare> rezervari) {
         for( int i = 1 ; i <= 30; i++){
             int g = 0;
             for( int j = 0; j < rezervari.size() && g == 0; j++) {
-                if (rezervari[j].getDay() == i)
+                if (rezervari[j].getDay() == i && rezervari[i].getSala() != s)
                     g = 1;
             }
             if(g == 0)
@@ -44,7 +44,7 @@ int selecteaza_data_zi(int n, vector<Rezervare> rezervari) {
         return ver;
     else {
         cout << "NU EXISTA LUNA: " << ver << endl;
-        return selecteaza_data_zi(ver, rezervari);
+        return selecteaza_data_zi(ver, s, rezervari);
     }
 }
 
@@ -74,8 +74,8 @@ int selecteaza_data_luna() {
     }
 }
 
-int selecteaza_sala(vector<Sala> s) {
-    int ver;
+string selecteaza_sala(vector<Sala> s) {
+    string ver;
 
     for (int i = 0; i < s.size(); i++) {
         cout << s[i] << endl;
@@ -86,14 +86,14 @@ int selecteaza_sala(vector<Sala> s) {
 }
 
 Rezervare creaza_rezervare(vector<Rezervare> rezervari, vector<Sala> sali) {
-    int sala, month, day;
-    string name;
+    int month, day;
+    string name, sala;
 
     cout << "Introduceti numele\n";
     cin >> name;
     sala = selecteaza_sala(sali);
     month = selecteaza_data_luna();
-    day = selecteaza_data_zi(month, rezervari);
+    day = selecteaza_data_zi(month, sala, rezervari);
 
     return Rezervare(name, sala, month, day);
 }
@@ -173,7 +173,7 @@ void save_rezervari(vector<Rezervare> r) {
             file << r[i].getName() << endl;
             file << r[i].getSala() << endl;
             file << r[i].getMonth() << endl;
-            file << r[i].getDay() << endl;
+            file << r[i].getDay()<< endl;
         }
     }
     file.close();
@@ -186,10 +186,10 @@ void load_rezervari(vector<Rezervare>& r) {
     if (!file) {
         cout << "No rezervari prezent";
     } else {
-        int sala, month, day;
-        string name;
+        int month, day;
+        string name, sala;
         while (!file.eof()) {
-            file >> name;
+            file >> name;   
             file >> sala;
             file >> month;
             file >> day;
@@ -202,41 +202,45 @@ void load_rezervari(vector<Rezervare>& r) {
 void filtreaza_capacitatea(vector<Sala>& f){
     int c;
     cin >> c;
-    for (auto i = f.begin(); i!=f.begin(); ++i){
-        if(i->getSeats() < c)
+    for (auto i = f.begin(); i!=f.end(); ++i){
+        if(i->getSeats() < c){
             f.erase(i);
+            i--;
+        }
     }
-    afisare_sali(f);
 }
 
 void filtreaza_pret(vector<Sala>& f){
     int p;
     cin >> p;
-    for (auto i = f.begin(); i!=f.begin(); ++i){
-        if(i->getPrice() > p)
+    for (auto i = f.begin(); i!=f.end(); ++i){
+        if(i->getPrice() > p){
             f.erase(i);
+            i--;
+        }
     }
-    afisare_sali(f);
 };
 
 void filtreaza_parcare(vector<Sala>& f){
     int p;
     cin >> p;
-    for (auto i = f.begin(); i!=f.begin(); ++i){
-        if(i->getParking() < p)
+    for (auto i = f.begin(); i!=f.end(); ++i){
+        if(i->getParking() < p){
             f.erase(i);
+            i--;
+        }
     }
-    afisare_sali(f);
 }
 
 void filtreaza_wifi(vector<Sala>& f){
     bool w;
     cin >> w;
-    for (auto i = f.begin(); i!=f.begin(); ++i){
-        if(i->getWifi() != w)
+    for (auto i = f.begin(); i!=f.end(); ++i){
+        if(i->getWifi() != w){
             f.erase(i);
+            i--;
+        }
     }
-    afisare_sali(f);
 }
 
 
@@ -253,18 +257,22 @@ void filtreaza_sali(vector<Rezervare> r, vector<Sala> s){
             case 1:
                 cout << "Numar de persoane:\n";
                 filtreaza_capacitatea(f);
+                afisare_sali(f);
                 break;
             case 2:
                 cout << "Pret:\n";
                 filtreaza_pret(f);
+                afisare_sali(f);
                 break;
             case 3:
                 cout << "Numar de locuri de parcare:\n";
                 filtreaza_parcare(f);
+                afisare_sali(f);
                 break;
             case 4:
                 cout << "Wifi:\n";
                 filtreaza_wifi(f);
+                afisare_sali(f);
                 break;
             case 5:
                 cout << "Se va crea o rezervare" << endl;
@@ -292,7 +300,7 @@ int main() {
     while (run) {
         cout << "1. Creaza rezervare\n2. Cauta rezervare\n3. Sterge "
                 "rezervare\n4. Print sali\n5. "
-                "Print rezervari\n6. "
+                "Print rezervari\n6. Filtreaza sali\n7. "
                 "Exit\n";
         cin >> choice;
 
@@ -323,12 +331,12 @@ int main() {
                 afisare_rezervari(rezervari);
                 break;
             case 6:
+                cout << "Selecteaza filtrul: ";
+                filtreaza_sali(rezervari,sali);
+            case 7:
                 run = false;
                 save_rezervari(rezervari);
                 break;
-            case 7:
-                cout << "Selecteaza filtrul: ";
-                filtreaza_sali(rezervari,sali);
             default:
                 cout << "\nOptiunea nu exisat\n";
                 break;

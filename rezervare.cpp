@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-Rezervare::Rezervare(string n, int s, int m, int d) {
+Rezervare::Rezervare(string n, string s, int m, int d) {
     this->name = n;
     this->sala = s;
     this->month = m;
@@ -12,14 +12,14 @@ Rezervare::Rezervare(string n, int s, int m, int d) {
 
 ostream& operator<<(ostream& os, const Rezervare& r) {
     os << "Nume: " << r.name << endl
-       << "Sala numarul: " << r.sala << endl
+       << "Sala: " << r.sala << endl
        << "In data de: " << r.day << "." << r.month << endl;
     return os;
 }
 
 string Rezervare::getName() { return name; }
 
-int Rezervare::getSala() { return sala; }
+string Rezervare::getSala() { return sala; }
 
 int Rezervare::getMonth() { return month; }
 

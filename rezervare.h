@@ -2,14 +2,14 @@
 using namespace std;
 
 class Rezervare {
-    string name;
-    int sala, month, day;
+    string name, sala;
+    int month, day;
 
    public:
-    Rezervare(string n, int s, int m, int d);
+    Rezervare(string n, string s, int m, int d);
     friend ostream& operator<<(ostream&, const Rezervare&);
     string getName();
-    int getSala();
+    string getSala();
     int getMonth();
     int getDay();
 };

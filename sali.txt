@@ -5,7 +5,19 @@ Sweden
 50
 
 India
-1
+0
 200
 100
 100
+
+Beijing
+1
+500
+50
+25
+
+Singapore
+1
+1000
+750
+500
