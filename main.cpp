@@ -5,7 +5,15 @@
 
 #include "rezervare.cpp"
 #include "sala.cpp"
+
+#define NC "\e[0m"
+#define RED "\e[0;31m"
+#define GRN "\e[0;32m"
+#define CYN "\e[0;36m"
+#define REDB "\e[41m"
 using namespace std;
+
+
 
 // CREATE REZERVARE
 int selecteaza_data_zi(int n, string s, vector<Rezervare> rezervari) {
@@ -43,7 +51,7 @@ int selecteaza_data_zi(int n, string s, vector<Rezervare> rezervari) {
     if (ver >= 1 && ver <= 31)
         return ver;
     else {
-        cout << "NU EXISTA LUNA: " << ver << endl;
+        cout << RED "NU EXISTA ZIUA: " << ver << endl;
         return selecteaza_data_zi(ver, s, rezervari);
     }
 }
@@ -69,7 +77,7 @@ int selecteaza_data_luna() {
     if (ver >= 1 && ver <= 12)
         return ver;
     else {
-        cout << "NU EXISTA LUNA: " << ver << endl;
+        cout <<RED "NU EXISTA LUNA: " << ver << endl;
         return selecteaza_data_luna();
     }
 }
@@ -89,7 +97,7 @@ Rezervare creaza_rezervare(vector<Rezervare> rezervari, vector<Sala> sali) {
     int month, day;
     string name, sala;
 
-    cout << "Introduceti numele\n";
+    cout <<NC "Introduceti numele\n";
     cin >> name;
     sala = selecteaza_sala(sali);
     month = selecteaza_data_luna();
@@ -115,12 +123,12 @@ void search_rezervare(vector<Rezervare> r, string name) {
     int g = 0;
     for (int i = 0; i < r.size(); i++) {
         if (r[i].getName() == name) {
-            cout << "Sala: " << r[i].getSala() << endl << "Data: " << r[i].getDay() << "." << r[i].getMonth() << endl;
+            cout <<NC "Sala: " << r[i].getSala() << endl <<NC "Data: " << r[i].getDay() << "." << r[i].getMonth() << endl;
             g = 1;
         }
     }
     if(g == 0)
-        cout << "Nu avem o rezervare facuta pe acest nume..." << endl;
+        cout <<RED "Nu avem o rezervare facuta pe acest nume..." << endl;
 }
 
 void afisare_sali(vector<Sala> s) {
@@ -144,7 +152,7 @@ void load_sali(vector<Sala>& s) {
     string line;
 
     if (!file) {
-        cout << "FILE NOT FOUND";
+        cout <<RED "FILE NOT FOUND";
     } else {
         int price, parking, seats;
         bool wifi;
@@ -167,7 +175,7 @@ void save_rezervari(vector<Rezervare> r) {
     ofstream file("rezervari.txt");
 
     if (!file) {
-        cout << "FILE NOT FOUND";
+        cout <<RED "FILE NOT FOUND";
     } else {
         for (int i = 0; i < r.size(); i++) {
             file << r[i].getName() << endl;
@@ -184,7 +192,7 @@ void load_rezervari(vector<Rezervare>& r) {
     string line;
 
     if (!file) {
-        cout << "No rezervari prezent";
+        cout <<RED "No rezervari prezent";
     } else {
         int month, day;
         string name, sala;
@@ -250,12 +258,12 @@ void filtreaza_sali(vector<Rezervare> r, vector<Sala> s){
     for (int i=0; i<s.size(); i++)
         f.push_back(s[i]);
     while(run){
-        cout << "1. Filtrare dupa capacitate\n2. Filtrare dupa pret\n3. Filtrare dupa locuri de parcare\n4. Filtrare dupa wifi\n5. Creaza rezervare\n6. Exit\n";
+        cout <<NC "1. Filtrare dupa capacitate\n2. Filtrare dupa pret\n3. Filtrare dupa locuri de parcare\n4. Filtrare dupa wifi\n5. Creaza rezervare\n6. Exit\n";
         int choice;
         cin >> choice;
         switch (choice) {
             case 1:
-                cout << "Numar de persoane:\n";
+                cout <<"Numar de persoane:\n";
                 filtreaza_capacitatea(f);
                 afisare_sali(f);
                 break;
@@ -298,7 +306,8 @@ int main() {
     load_sali(sali);
     load_rezervari(rezervari);
     while (run) {
-        cout << "1. Creaza rezervare\n2. Cauta rezervare\n3. Sterge "
+        cout <<GRN "ALEGE O OPTIUNE:" << endl;
+        cout <<NC "1. Creaza rezervare\n2. Cauta rezervare\n3. Sterge "
                 "rezervare\n4. Print sali\n5. "
                 "Print rezervari\n6. Filtreaza sali\n7. "
                 "Exit\n";
@@ -306,39 +315,39 @@ int main() {
 
         switch (choice) {
             case 1:
-                cout << "Se va crea o rezervare" << endl;
+                cout <<GRN "Se va crea o rezervare" << endl;
                 rezervari.push_back(creaza_rezervare(rezervari,sali));
                 save_rezervari(rezervari);
                 break;
             case 2:
-                cout << "Introduceti numele dvs: " << endl;
+                cout <<GRN "Introduceti numele dvs: " << endl;
                 cin >> name;
                 search_rezervare(rezervari, name);
                 break;
             case 3:
-                cout << "Se va sterge o rezervare" << endl;
+                cout <<GRN "Se va sterge o rezervare" << endl;
                 cout << "Introduceti numele dvs: " << endl;
                 cin >> delete_name;
                 delete_rezervare(rezervari, delete_name);
                 save_rezervari(rezervari);
                 break;
             case 4:
-                cout << "Printam sali" << endl;
+                cout <<GRN "Printam sali" << endl;
                 afisare_sali(sali);
                 break;
             case 5:
-                cout << "Printam rezervari" << endl;
+                cout <<GRN "Printam rezervari" << endl;
                 afisare_rezervari(rezervari);
                 break;
             case 6:
-                cout << "Selecteaza filtrul: ";
+                cout <<GRN "Selecteaza filtrul: ";
                 filtreaza_sali(rezervari,sali);
             case 7:
                 run = false;
                 save_rezervari(rezervari);
                 break;
             default:
-                cout << "\nOptiunea nu exisat\n";
+                cout <<RED "\nOptiunea nu exisat\n";
                 break;
         }
     }
