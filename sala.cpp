@@ -16,3 +16,9 @@ ostream& operator<<(ostream& os, const Sala& b) {
        << b.parking << endl;
     return os;
 }
+
+string Sala::getName() { return name; }
+bool Sala::getWifi() { return wifi; }
+int Sala::getPrice() { return price; }
+int Sala::getParking() { return parking; }
+int Sala::getSeats() { return seats; }
